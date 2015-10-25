@@ -1,0 +1,69 @@
+---
+title: 'Statistical Inference course project: the exponential distribution and the
+  central limit theorem'
+author: "Enrico Gaffo"
+date: "21/10/2015"
+output: pdf_document
+---
+
+# Overview 
+The exponential distribution is compared with the Central Limit Theorem by simulating a thousand times the distribution of averages of 40 exponentials.
+
+# Simulations
+For the simulations set a seed to replicate the computation. Set number of simulations, distribution parameters (lambda and number of observations) to set in the rexp() function. Then concatenate the 1000 means of 40 random exponentials through the use of a for loop. 
+
+```{r, echo=TRUE}
+set.seed(23)
+nsim <- 1000
+lambda <- 0.2
+nobs <- 40
+## sample means vector
+mns = NULL
+## simulations
+for (i in 1 : nsim) mns = c(mns, mean(rexp(nobs, lambda)))
+```
+
+# Sample Mean versus Theoretical Mean
+Show the sample mean and compare it to the theoretical mean of the distribution.
+
+```{r, echo=TRUE}
+## sample mean
+sample.mean <- mean(mns)
+sample.mean
+## theoretical mean
+theo.mean <- 1/lambda
+theo.mean
+
+## plot histogram of the means and highlight sample and theoretical mean with coloured lines
+hist(mns, main = "1000 means of 40 random exponentials with lambda = 0.2 ", xlab = "Mean")
+abline(v = theo.mean, col = "red")
+abline(v = sample.mean, col = "blue")
+```
+
+Theoretical mean is `r theo.mean`, while sample mean is `r sample.mean`. The histogram above shows the theoretical and the sample means with red and blue vertical lines, respectively. The means are very close and the two vertical lines can barely be distinguished.
+
+# Sample Variance versus Theoretical Variance
+Show how variable the sample is (via variance) and compare it to the theoretical variance of the distribution.
+
+```{r, echo=TRUE}
+## variance of the sample means
+sample.variance <- var(mns)
+## theoretical variance
+theo.variance <- (1/lambda)^2 / nobs
+```
+
+Theoretical variance is `r theo.variance`, while sample variance is `r sample.variance`. They are different but close. 
+
+# Distribution
+Show that the distribution is approximately normal.
+
+```{r, echo=TRUE}
+norm.range <- seq(from = min(mns), to = max(mns), length.out = 100)
+norm.vals <- dnorm(norm.range, mean = theo.mean, sd = sqrt(theo.variance))
+hist(mns, main = "1000 means of 40 random exponentials with lambda = 0.2 ", breaks = 100, probability = T)
+lines(norm.range, norm.vals)
+qqnorm(mns)
+qqline(mns)
+```
+
+The plot shows the approximately normal trend of the histogram of sample means by overplotting the normal distribution for the points in the first panel. The second panel (QQ plot) shows the agreement of normal distribution quantiles vs the sample mean quantiles, following the Central Limit Theorem.
