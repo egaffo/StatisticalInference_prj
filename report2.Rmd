@@ -1,0 +1,39 @@
+---
+title: 'Statistical Inference course project: Tooth Growth data set exploratory analysis'
+author: "Enrico Gaffo"
+date: "25 ottobre 2015"
+output: pdf_document
+---
+
+## Synopsis
+We're going to analyze the ToothGrowth data in the R datasets package.
+
+## Exploratory Analysis
+Load the ToothGrowth data and perform some basic exploratory data analyses 
+Provide a basic summary of the data.
+
+```{r, echo=TRUE}
+library(datasets)
+data("ToothGrowth")
+summary(ToothGrowth)
+library(GGally)
+ggpairs(ToothGrowth)
+library(ggplot2)
+qplot(factor(dose), len, fill = supp, data = ToothGrowth, 
+      geom = "boxplot", position = "dodge") + geom_jitter() +
+  xlab("Vitamin C dose") + 
+  ylab("length of odontoblasts (teeth)")
+```
+
+Use confidence intervals and/or hypothesis tests to compare tooth growth by supp and dose. (Only use the techniques from class, even if there's other approaches worth considering)
+
+```{r, echo=TRUE}
+table(ToothGrowth$supp, ToothGrowth$dose)
+library(reshape2)
+wtgs <- split(ToothGrowth, ToothGrowth$supp)
+t.test(wtg$OJ$len, wtg$VC$len, paired = F)
+# wtgd <- split(ToothGrowth, ToothGrowth$dose)
+# t.test(len~dose, data = ToothGrowth, paired = F)
+```
+
+
